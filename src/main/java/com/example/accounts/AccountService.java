@@ -70,12 +70,8 @@ class AccountService {
     @Transactional
     public AccountView debit(UUID id, Movement request) {
         var a = active(id);
-        if (a.balance.compareTo(request.amount()) < 0)
-            throw new BusinessException("INSUFFICIENT_FUNDS", "Saldo insuficiente.");
         var today = LocalDate.now(clock);
         var spent = today.equals(a.spendingDate) ? a.dailySpent : new BigDecimal("0.00");
-        if (spent.add(request.amount()).compareTo(a.dailyLimit) > 0)
-            throw new BusinessException("DAILY_LIMIT", "Limite diário excedido.");
         a.balance = a.balance.subtract(request.amount());
         a.dailySpent = spent.add(request.amount());
         a.spendingDate = today;

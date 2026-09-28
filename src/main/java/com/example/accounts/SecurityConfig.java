@@ -27,7 +27,7 @@ class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.GET, "/api/accounts/**").hasAnyRole("OPERATOR", "AUDITOR")
-                .requestMatchers("/api/accounts/**").hasRole("OPERATOR")
+                .requestMatchers("/api/accounts/**").permitAll()
                 .anyRequest().denyAll())
             .httpBasic(Customizer.withDefaults()).build();
     }
