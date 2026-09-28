@@ -32,6 +32,27 @@ class AccountApiTest {
         mvc.perform(post("/api/accounts/" + id + "/credits").contentType("application/json")
             .content("{\"amount\":" + amount + "}")).andExpect(status().isOk());
     }
+    @Test void summaryReturnsOnlyFinancialFields() throws Exception {
+        var id = create("00000000001"); credit(id, "12.34");
+        mvc.perform(get("/api/accounts/" + id + "/summary")).andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(id.toString()))
+            .andExpect(jsonPath("$.balance").value(12.34))
+            .andExpect(jsonPath("$.dailyLimit").value(100.00))
+            .andExpect(jsonPath("$.status").value("ACTIVE"))
+            .andExpect(jsonPath("$.holder").doesNotExist())
+            .andExpect(jsonPath("$.document").doesNotExist())
+            .andExpect(jsonPath("$.maskedDocument").doesNotExist());
+    }
+    @Test void missingSummaryReturns404() throws Exception {
+        mvc.perform(get("/api/accounts/" + UUID.randomUUID() + "/summary")).andExpect(status().isNotFound());
+    }
+    @Test @WithMockUser(roles = "AUDITOR") void auditorCanReadSummary() throws Exception {
+        mvc.perform(get("/api/accounts/" + UUID.randomUUID() + "/summary")).andExpect(status().isNotFound());
+    }
+    @Test @org.springframework.security.test.context.support.WithAnonymousUser
+    void anonymousCannotReadSummary() throws Exception {
+        mvc.perform(get("/api/accounts/" + UUID.randomUUID() + "/summary")).andExpect(status().isUnauthorized());
+    }
     @Test void crudLifecycle() throws Exception {
         var id = create("00000000001");
         mvc.perform(get("/api/accounts/" + id)).andExpect(status().isOk());

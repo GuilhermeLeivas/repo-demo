@@ -14,6 +14,7 @@ final class Contracts {
         @NotBlank @Size(max = 100) String holder,
         @NotNull @DecimalMin("0.01") @DecimalMax("10000.00") @Digits(integer = 5, fraction = 2) BigDecimal dailyLimit,
         @NotNull Account.Status status) {}
+    record AccountSummary(UUID id, BigDecimal balance, BigDecimal dailyLimit, Account.Status status) {}
     record Movement(
         @NotNull @DecimalMin("0.01") @DecimalMax("100000.00") @Digits(integer = 6, fraction = 2) BigDecimal amount) {}
     record AccountView(UUID id, String holder, String maskedDocument, BigDecimal balance,

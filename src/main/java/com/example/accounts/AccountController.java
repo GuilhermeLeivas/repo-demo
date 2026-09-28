@@ -20,6 +20,7 @@ class AccountController {
                            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
         return service.list(page, size);
     }
+    @GetMapping("/{id}/summary") AccountSummary summary(@PathVariable UUID id) { return service.summary(id); }
     @GetMapping("/{id}") AccountView get(@PathVariable UUID id) { return service.get(id); }
     @PostMapping ResponseEntity<AccountView> create(@Valid @RequestBody CreateAccount body) {
         var account = service.create(body);

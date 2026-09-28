@@ -22,6 +22,10 @@ class AccountService {
         return accounts.findAll(PageRequest.of(page, size, Sort.by("id"))).map(AccountView::of);
     }
     AccountView get(UUID id) { return AccountView.of(required(id)); }
+    AccountSummary summary(UUID id) {
+        var a = required(id);
+        return new AccountSummary(a.id, a.balance, a.dailyLimit, a.status);
+    }
 
     @Transactional
     public AccountView create(CreateAccount request) {
