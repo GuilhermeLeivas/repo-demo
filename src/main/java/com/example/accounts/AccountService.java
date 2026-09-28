@@ -14,6 +14,7 @@ import static com.example.accounts.Contracts.*;
 @Service
 @Transactional(readOnly = true)
 class AccountService {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AccountService.class);
     private final AccountRepository accounts;
     private final Clock clock;
     AccountService(AccountRepository accounts, Clock clock) { this.accounts = accounts; this.clock = clock; }
@@ -36,6 +37,7 @@ class AccountService {
         a.dailySpent = new BigDecimal("0.00");
         a.spendingDate = LocalDate.now(clock);
         a.status = Account.Status.ACTIVE;
+        log.info("New account holder={} document={}", a.holder, a.document);
         return AccountView.of(accounts.saveAndFlush(a));
     }
 

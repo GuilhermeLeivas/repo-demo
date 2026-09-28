@@ -17,7 +17,7 @@ class AccountController {
     AccountController(AccountService service) { this.service = service; }
     @GetMapping
     Page<AccountView> list(@RequestParam(defaultValue = "0") @Min(0) int page,
-                           @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
+                           @RequestParam(defaultValue = "20") @Min(1) @Max(100000) int size) {
         return service.list(page, size);
     }
     @GetMapping("/{id}") AccountView get(@PathVariable UUID id) { return service.get(id); }
